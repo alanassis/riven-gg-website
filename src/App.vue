@@ -45,8 +45,8 @@
               class="rounded-lg"
               style="min-width: 0; margin-left: 35%"
               @click="searchSummoner"
-              :disabled="waitingForSearch"
-              :dark="!waitingForSearch"
+              :disabled="searchButtonDisabled"
+              :dark="!searchButtonDisabled"
               depressed
             >
               <v-icon>mdi-arrow-right</v-icon>
@@ -77,11 +77,11 @@ export default {
     waitingForSearch: false,
     searchSummonerData: {
       nickname: "",
-      region: "BR1",
+      region: "brazil",
     },
     regions: [
-      { text: "Brazil", value: "BR1" },
-      { text: "EU East", value: "EUN1" },
+      { text: "Brazil", value: "brazil" },
+      { text: "EU East", value: "eu_east" },
     ],
     summoner: null,
   }),
@@ -107,6 +107,15 @@ export default {
       } else {
         alert(error.response);
       }
+    },
+  },
+
+  computed: {
+    searchButtonDisabled() {
+      if (this.waitingForSearch) return true;
+      if (!this.searchSummonerData.nickname) return true;
+      if (!this.searchSummonerData.region) return true;
+      return false;
     },
   },
 };
