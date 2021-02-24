@@ -16,13 +16,13 @@
 
       <v-divider></v-divider>
 
-      <v-container>
+      <v-container v-show="!mini">
         <v-row justify="center">
           <span class="mt-12 text-h6 font-weight-bold">Buscar invocador</span>
           <v-col cols="12">
             <v-text-field
               label="Nome de invocador"
-              v-model="searchSummonerData.name"
+              v-model="searchSummonerData.nickname"
               class="mx-4 mt-2 rounded-lg text-subtitle-1 no-border"
               filled
             />
@@ -45,8 +45,9 @@
               class="rounded-lg"
               style="min-width: 0; margin-left: 35%"
               @click="searchSummoner"
+              :disabled="waitingForSearch"
+              :dark="!waitingForSearch"
               depressed
-              dark
             >
               <v-icon>mdi-arrow-right</v-icon>
             </v-btn>
@@ -55,13 +56,14 @@
       </v-container>
     </v-navigation-drawer>
     <v-main>
-      <MainPage />
+      <MainPage :summoner="summoner" />
     </v-main>
   </v-app>
 </template>
 
 <script>
 import MainPage from "./components/MainPage";
+import ProfileRepository from "./services/profileRepository";
 
 export default {
   name: "App",
@@ -72,19 +74,39 @@ export default {
 
   data: () => ({
     mini: false,
+    waitingForSearch: false,
     searchSummonerData: {
-      name: "",
+      nickname: "",
       region: "BR1",
     },
     regions: [
       { text: "Brazil", value: "BR1" },
       { text: "EU East", value: "EUN1" },
     ],
+    summoner: null,
   }),
 
   methods: {
     searchSummoner() {
-      console.log(this.searchSummonerData);
+      this.waitingForSearch = true;
+      ProfileRepository.getSummoner(this.searchSummonerData)
+        .then((res) => {
+          this.summoner = res.data;
+          this.mini = true;
+        })
+        .catch((err) => {
+          this.showError(err);
+        })
+        .finally(() => {
+          this.waitingForSearch = false;
+        });
+    },
+    showError(error) {
+      if (error.response) {
+        alert(error.response.data.message);
+      } else {
+        alert(error.response);
+      }
     },
   },
 };
