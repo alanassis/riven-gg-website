@@ -1,56 +1,100 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-navigation-drawer :mini-variant.sync="mini" app>
+      <v-list-item class="px-2">
+        <v-list-item-avatar>
+          <v-img
+            src="@/assets/dawnbringer-logo.png"
+            @click="mini = !mini"
+          ></v-img>
+        </v-list-item-avatar>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+        <v-list-item-title class="ml-6 font-weight-black"
+          >RIVEN.GG</v-list-item-title
+        >
+      </v-list-item>
 
-      <v-spacer></v-spacer>
+      <v-divider></v-divider>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
+      <v-container>
+        <v-row justify="center">
+          <span class="mt-12 text-h6 font-weight-bold">Buscar invocador</span>
+          <v-col cols="12">
+            <v-text-field
+              label="Nome de invocador"
+              v-model="searchSummonerData.name"
+              class="mx-4 mt-2 rounded-lg text-subtitle-1 no-border"
+              filled
+            />
+          </v-col>
+          <v-col cols="12">
+            <v-select
+              label="Região"
+              v-model="searchSummonerData.region"
+              :items="regions"
+              class="mx-4 mt-n10 rounded-lg no-border"
+              filled
+            />
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              color="#d13639"
+              min-height="0"
+              width="50"
+              height="50"
+              class="rounded-lg"
+              style="min-width: 0; margin-left: 35%"
+              @click="searchSummoner"
+              depressed
+              dark
+            >
+              <v-icon>mdi-arrow-right</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-navigation-drawer>
     <v-main>
-      <HelloWorld />
+      <MainPage />
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import MainPage from "./components/MainPage";
 
 export default {
   name: "App",
 
   components: {
-    HelloWorld
+    MainPage,
   },
 
   data: () => ({
-    //
-  })
+    mini: false,
+    searchSummonerData: {
+      name: "",
+      region: "BR1",
+    },
+    regions: [
+      { text: "Brazil", value: "BR1" },
+      { text: "EU East", value: "EUN1" },
+    ],
+  }),
+
+  methods: {
+    searchSummoner() {
+      console.log(this.searchSummonerData);
+    },
+  },
 };
 </script>
+
+<style>
+.no-border.v-text-field > .v-input__control > .v-input__slot:before {
+  border-style: none;
+}
+.no-border.v-text-field > .v-input__control > .v-input__slot:after {
+  border-style: none;
+}
+</style>
