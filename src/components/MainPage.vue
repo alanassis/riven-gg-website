@@ -3,30 +3,39 @@
     <v-img :height="screenHeight" src="@/assets/riven-0.jpg">
       <v-container fill-height v-if="summoner">
         <v-row justify="center" align="center">
-          <v-card width="75vmin" height="90vmin" class="pa-4">
+          <v-card
+            width="75vmin"
+            height="90vmin"
+            class="pa-4"
+            color="rgb(255, 255, 255, 0.75)"
+          >
             <v-row justify="center" dense>
               <v-col>
-                <div class="d-flex justify-center">
-                  <v-avatar size="17vmin">
-                    <v-img src="@/assets/dawnbringer-logo.png" />
-                  </v-avatar>
-                </div>
-                <v-card-title class="text-subtitle-2 justify-center mt-n4">{{
-                  `${soloDuoLeague.tier} ${soloDuoLeague.rank}`
-                }}</v-card-title>
+                <span v-show="leagues.length > 0">
+                  <div class="d-flex justify-center">
+                    <v-avatar size="17vmin">
+                      <v-img src="@/assets/dawnbringer-logo.png" />
+                    </v-avatar>
+                  </div>
+                  <v-card-title class="text-subtitle-2 justify-center mt-n4">{{
+                    `${soloDuoLeague.tier} ${soloDuoLeague.rank}`
+                  }}</v-card-title>
+                </span>
               </v-col>
               <v-avatar size="30vmin">
                 <v-img :src="summoner.profileIcon" />
               </v-avatar>
               <v-col>
-                <div class="d-flex justify-center">
-                  <v-avatar size="17vmin">
-                    <v-img src="@/assets/dawnbringer-logo.png" />
-                  </v-avatar>
-                </div>
-                <v-card-title class="text-subtitle-2 justify-center mt-n4">{{
-                  `${flexLeague.tier} ${flexLeague.rank}`
-                }}</v-card-title>
+                <span v-show="leagues.length > 0">
+                  <div class="d-flex justify-center">
+                    <v-avatar size="17vmin">
+                      <v-img src="@/assets/dawnbringer-logo.png" />
+                    </v-avatar>
+                  </div>
+                  <v-card-title class="text-subtitle-2 justify-center mt-n4">{{
+                    `${flexLeague.tier} ${flexLeague.rank}`
+                  }}</v-card-title>
+                </span>
               </v-col>
               <v-col class="text-center" cols="12">
                 <v-card-title class="text-h4 justify-center">{{
