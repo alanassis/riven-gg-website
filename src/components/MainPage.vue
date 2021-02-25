@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import LeagueRepository from "../services/leagueRepository";
+import ProfileRepository from "../services/profileRepository";
 
 export default {
   name: "MainPage",
@@ -126,7 +126,7 @@ export default {
 
   methods: {
     getLeague() {
-      LeagueRepository.getLeague(this.summoner)
+      ProfileRepository.getLeague(this.summoner)
         .then((res) => {
           this.leagues = res.data;
         })

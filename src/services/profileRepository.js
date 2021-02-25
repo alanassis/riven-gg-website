@@ -8,4 +8,9 @@ export default {
       `${resource}/${searchData.region}/${searchData.nickname}`
     );
   },
+  getLeague(searchData) {
+    return repository.get(
+      `${resource}/${searchData.region}/${searchData.id}/league`
+    );
+  },
 };
