@@ -76,11 +76,11 @@ export default {
     mini: false,
     waitingForSearch: false,
     searchSummonerData: {
-      nickname: "",
-      region: "brazil",
+      nickname: "Alankazam",
+      region: "br1",
     },
     regions: [
-      { text: "Brazil", value: "brazil" },
+      { text: "Brazil", value: "br1" },
       { text: "EU East", value: "eu_east" },
     ],
     summoner: null,
