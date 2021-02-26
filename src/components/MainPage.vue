@@ -45,31 +45,32 @@
               <v-col cols="12">
                 <v-card color="gray">
                   <v-virtual-scroll
-                    :bench="benched"
-                    :items="items"
+                    :items="matches"
                     height="300"
                     item-height="64"
                   >
                     <template v-slot:default="{ item }">
-                      <v-list-item :key="item">
+                      <v-list-item :key="item.gameId">
                         <v-list-item-action class="mr-2">
                           <v-btn fab small depressed color="primary">
-                            {{ item }}
+                            {{ item.summonerParticipant.championName[0] }}
                           </v-btn>
                         </v-list-item-action>
 
                         <v-list-item-content>
                           <v-list-item-title class="text-subtitle-2">
-                            RIVEN
+                            {{ item.summonerParticipant.championName }}
                           </v-list-item-title>
                         </v-list-item-content>
 
                         <v-list-item-content>
                           <v-list-item-title class="text-center">
-                            15/2/12
+                            {{ getKDA(item.summonerParticipant.stats) }}
                           </v-list-item-title>
                           <v-list-item-title class="text-center">
-                            266cs
+                            {{
+                              item.summonerParticipant.stats.totalMinionsKilled
+                            }}
                           </v-list-item-title>
                         </v-list-item-content>
 
@@ -79,22 +80,22 @@
 
                         <v-list-item-content>
                           <v-list-item-title class="text-center">
-                            15/2/12
+                            {{ getKDA(item.enemyParticipant.stats) }}
                           </v-list-item-title>
                           <v-list-item-title class="text-center">
-                            266cs
+                            {{ item.enemyParticipant.stats.totalMinionsKilled }}
                           </v-list-item-title>
                         </v-list-item-content>
 
                         <v-list-item-content>
                           <v-list-item-title class="text-subtitle-2 text-end">
-                            RIVEN
+                            {{ item.enemyParticipant.championName }}
                           </v-list-item-title>
                         </v-list-item-content>
 
                         <v-list-item-action class="ml-2">
                           <v-btn fab small depressed color="primary">
-                            {{ item }}
+                            {{ item.enemyParticipant.championName[0] }}
                           </v-btn>
                         </v-list-item-action>
                       </v-list-item>
@@ -118,6 +119,7 @@ export default {
 
   data: () => ({
     leagues: [],
+    matches: [],
   }),
 
   props: {
@@ -125,14 +127,26 @@ export default {
   },
 
   methods: {
-    getLeague() {
-      ProfileRepository.getLeague(this.summoner)
+    getLeagues() {
+      ProfileRepository.getLeagues(this.summoner)
         .then((res) => {
           this.leagues = res.data;
         })
         .catch((err) => {
           this.showError(err);
         });
+    },
+    getMatches() {
+      ProfileRepository.getMatches(this.summoner)
+        .then((res) => {
+          this.matches = res.data;
+        })
+        .catch((err) => {
+          this.showError(err);
+        });
+    },
+    getKDA({ kills, deaths, assists }) {
+      return `${kills}/${deaths}/${assists}`;
     },
     showError(error) {
       if (error.response) {
@@ -168,10 +182,9 @@ export default {
   },
 
   watch: {
-    summoner(newSummoner) {
-      if (newSummoner && newSummoner.id) {
-        this.getLeague();
-      }
+    summoner() {
+      this.getLeagues();
+      this.getMatches();
     },
   },
 };
