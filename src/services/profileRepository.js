@@ -8,9 +8,14 @@ export default {
       `${resource}/${searchData.region}/${searchData.nickname}`
     );
   },
-  getLeague(searchData) {
+  getLeagues(searchData) {
     return repository.get(
-      `${resource}/${searchData.region}/${searchData.id}/league`
+      `${resource}/${searchData.region}/${searchData.summonerId}/leagues`
+    );
+  },
+  getMatches(searchData) {
+    return repository.get(
+      `${resource}/${searchData.region}/${searchData.accountId}/matches`
     );
   },
 };
