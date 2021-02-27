@@ -56,13 +56,14 @@
       </v-container>
     </v-navigation-drawer>
     <v-main>
-      <MainPage :summoner="summoner" />
+      <MainPage :version="version" :summoner="summoner" />
     </v-main>
   </v-app>
 </template>
 
 <script>
 import MainPage from "./components/MainPage";
+import UtilRepository from "./services/utilRepository";
 import ProfileRepository from "./services/profileRepository";
 
 export default {
@@ -83,10 +84,20 @@ export default {
       { text: "Brazil", value: "br1" },
       { text: "EU East", value: "eu_east" },
     ],
+    version: "",
     summoner: null,
   }),
 
   methods: {
+    getVersion() {
+      UtilRepository.getVersion()
+        .then((res) => {
+          this.version = res.data.version;
+        })
+        .catch((err) => {
+          this.showError(err);
+        });
+    },
     searchSummoner() {
       this.waitingForSearch = true;
       ProfileRepository.getSummoner(this.searchSummonerData)
@@ -117,6 +128,10 @@ export default {
       if (!this.searchSummonerData.region) return true;
       return false;
     },
+  },
+
+  mounted: function () {
+    this.getVersion();
   },
 };
 </script>
