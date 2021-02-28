@@ -65,10 +65,13 @@
                   <v-virtual-scroll
                     :items="matches"
                     height="300"
-                    item-height="64"
+                    item-height="72"
                   >
                     <template v-slot:default="{ item }">
-                      <v-list-item :key="item.gameId">
+                      <v-list-item
+                        :key="item.gameId"
+                        :style="getMatchColor(item.summonerParticipant.stats)"
+                      >
                         <v-list-item-action class="mr-2">
                           <v-avatar>
                             <v-img
@@ -77,20 +80,20 @@
                           </v-avatar>
                         </v-list-item-action>
 
-                        <!-- <v-list-item-content>
-                          <v-list-item-title class="text-subtitle-2">
-                            {{ item.summonerParticipant.championName }}
-                          </v-list-item-title>
-                        </v-list-item-content> -->
+                        <v-list-item-action-text>
+                          <Spells
+                            :version="version"
+                            :firstSpell="item.summonerParticipant.spell1Id"
+                            :secondSpell="item.summonerParticipant.spell2Id"
+                          />
+                        </v-list-item-action-text>
 
                         <v-list-item-content>
                           <v-list-item-title class="text-center">
                             {{ getKDA(item.summonerParticipant.stats) }}
                           </v-list-item-title>
                           <v-list-item-title class="text-center">
-                            {{
-                              item.summonerParticipant.stats.totalMinionsKilled
-                            }}
+                            {{ getTotalCS(item.summonerParticipant.stats) }}
                           </v-list-item-title>
                         </v-list-item-content>
 
@@ -103,15 +106,17 @@
                             {{ getKDA(item.enemyParticipant.stats) }}
                           </v-list-item-title>
                           <v-list-item-title class="text-center">
-                            {{ item.enemyParticipant.stats.totalMinionsKilled }}
+                            {{ getTotalCS(item.summonerParticipant.stats) }}
                           </v-list-item-title>
                         </v-list-item-content>
 
-                        <!-- <v-list-item-content>
-                          <v-list-item-title class="text-subtitle-2 text-end">
-                            {{ item.enemyParticipant.championName }}
-                          </v-list-item-title>
-                        </v-list-item-content> -->
+                        <v-list-item-action-text>
+                          <Spells
+                            :version="version"
+                            :firstSpell="item.enemyParticipant.spell1Id"
+                            :secondSpell="item.enemyParticipant.spell2Id"
+                          />
+                        </v-list-item-action-text>
 
                         <v-list-item-action class="ml-2">
                           <v-avatar>
@@ -135,6 +140,7 @@
 
 <script>
 import ProfileRepository from "../services/profileRepository";
+import Spells from "./sub-components/Spells";
 
 export default {
   name: "MainPage",
@@ -143,6 +149,10 @@ export default {
     leagues: [],
     matches: [],
   }),
+
+  components: {
+    Spells,
+  },
 
   props: {
     version: String,
@@ -170,6 +180,14 @@ export default {
     },
     getKDA({ kills, deaths, assists }) {
       return `${kills}/${deaths}/${assists}`;
+    },
+    getTotalCS({ totalMinionsKilled, neutralMinionsKilled }) {
+      return totalMinionsKilled + neutralMinionsKilled;
+    },
+    getMatchColor({ win }) {
+      return `background-color: ${
+        win === true ? "rgb(180, 180, 255)" : "rgb(255, 180, 180)"
+      }`;
     },
     showError(error) {
       if (error.response) {
